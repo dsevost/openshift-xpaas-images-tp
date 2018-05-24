@@ -1,12 +1,21 @@
 FROM redhat-openjdk-18/openjdk18-openshift
 
-ARG REDHAT_COMPONENT_NAME
-ARG REDHAT_REPO_URL
-
 USER 0
+
+#RUN \
+#    yum-config-manager \
+#	--disable \* \
+#	--enable amq-interconnect-1-for-rhel-7-server-rpms \
+#	--enable rhel-7-server-rpms \
+#	> /dev/null \
+#    && \
 
 RUN \
     yum install -y \
+	--disablerepo \* \
+        --enablerepo amq-clients-2-for-rhel-7-server-rpms \
+	--enablerepo amq-interconnect-1-for-rhel-7-server-rpms \
+	--enablerepo rhel-7-server-rpms \
 	gettext \
 	hostname \
 	libaio \
@@ -16,13 +25,25 @@ RUN \
     && \
     yum clean all
 
+ARG REDHAT_COMPONENT_NAME
+ARG REDHAT_REPO_URL
+
 RUN \
     set -x ; \
-    curl  -o /tmp/$REDHAT_COMPONENT_NAME $REDHAT_REPO_URL/$REDHAT_COMPONENT_NAME && \
+    curl -vo /tmp/$REDHAT_COMPONENT_NAME $REDHAT_REPO_URL/$REDHAT_COMPONENT_NAME && \
     unzip -d /opt /tmp/$REDHAT_COMPONENT_NAME && \
     rm -f /tmp/$REDHAT_COMPONENT_NAME && \
     mkdir -p /var/run/amq /etc/qpid-dispatch && \
     chgrp 0 /var/run/amq /etc/qpid-dispatch && \
-    chmod g+w /var/run/amq /etc/qpid-dispatch
+    chmod g+w /var/run/amq /etc/qpid-dispatch && \
+    ln -sf /opt/amq-broker-* /opt/amq-broker
 
 USER jboss
+
+ENV \
+   AMQ_HOME=/opt/amq-broker
+
+CMD /bin/bash -c "/bin/bash $AMQ_HOME/conf/run-amq.sh"
+
+COPY resources/* $AMQ_HOME/conf/
+
