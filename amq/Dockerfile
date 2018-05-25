@@ -29,8 +29,9 @@ RUN \
     mkdir -p /var/run/amq /etc/qpid-dispatch && \
     chgrp 0 /var/run/amq /etc/qpid-dispatch && \
     chmod g+w /var/run/amq /etc/qpid-dispatch && \
-    ln -sf /opt/amq-broker-* /opt/amq-broker && \
-    rm -f /opt/amq-broker/lib/slf4j-jboss-logmanager-1.0.3.GA-redhat-2.jar
+    ln -sf /opt/amq-broker-* /opt/amq-broker
+#     && \
+#    rm -f /opt/amq-broker/lib/slf4j-jboss-logmanager-1.0.3.GA-redhat-2.jar
 
 USER jboss
 
