@@ -20,4 +20,8 @@ sed -ci.bak1 \
     '/<cors>/a <allow-origin>http://*.openshift.tk</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
     /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
 
+sed -ci.bak1 \
+    '|http://localhost:8161|http://0.0.0.0:8161|' \
+    /var/run/amq/$HOSTNAME/etc/bootstrap.xml
+
 exec /var/run/amq/$HOSTNAME/bin/artemis run
