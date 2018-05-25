@@ -26,11 +26,11 @@ RUN \
     curl -vo /tmp/$REDHAT_COMPONENT_NAME $REDHAT_REPO_URL/$REDHAT_COMPONENT_NAME && \
     unzip -d /opt /tmp/$REDHAT_COMPONENT_NAME && \
     rm -f /tmp/$REDHAT_COMPONENT_NAME && \
-    rm -f /opt/$REDHAT_COMPONENT_NAME/lib/slf4j-jboss-logmanager-1.0.3.GA-redhat-2.jar && \
     mkdir -p /var/run/amq /etc/qpid-dispatch && \
     chgrp 0 /var/run/amq /etc/qpid-dispatch && \
     chmod g+w /var/run/amq /etc/qpid-dispatch && \
-    ln -sf /opt/amq-broker-* /opt/amq-broker
+    ln -sf /opt/amq-broker-* /opt/amq-broker && \
+    rm -f /opt/amq-broker/lib/slf4j-jboss-logmanager-1.0.3.GA-redhat-2.jar
 
 USER jboss
 
