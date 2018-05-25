@@ -20,4 +20,8 @@ sed -ci.bak1 \
     's|http://localhost:8161|http://0.0.0.0:8161|' \
     /var/run/amq/$HOSTNAME/etc/bootstrap.xml
 
+sed -ci.bak1 \
+    '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND \\' \
+    /var/run/amq/$HOSTNAME/bin/artemis
+
 exec /var/run/amq/$HOSTNAME/bin/artemis run
