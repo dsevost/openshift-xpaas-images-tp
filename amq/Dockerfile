@@ -35,7 +35,7 @@ ARG REDHAT_REPO_URL
 
 ENV \
     AMQ_HOME=/opt/amq-broker \
-    JAVA_OPTS_APPEND=-javaagent:/opt/prometheus/lib/jmx_prometheus_javaagent.jar=9779:/opt/prometheus/etc/prometheus-config.yml \
+    JAVA_OPTS_APPEND=-javaagent:/opt/prometheus/lib/jmx_prometheus_javaagent.jar=9779:/opt/prometheus/etc/prometheus-jmx-exporter-config.yaml \
     PROMETHEUS_HOME=/opt/prometheus
 
 RUN \
@@ -64,4 +64,5 @@ CMD /bin/bash -c "/bin/bash $AMQ_HOME/bin/run-amq.sh"
 EXPOSE 8161 9779
 
 COPY resources/run-amq.sh $AMQ_HOME/bin/
-COPY resources/prometheus-config.yml ${PROMETHEUS_HOME}/etc
+COPY resources/prometheus-jmx-exporter-config.yaml ${PROMETHEUS_HOME}/etc
+COPY resources/management.xml $AMQ_HOME/templates/
