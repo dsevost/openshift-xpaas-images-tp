@@ -55,7 +55,7 @@ RUN \
 	${per}/jmx_prometheus_javaagent-${pev}.jar \
         -o ${PROMETHEUS_HOME}/lib/jmx_prometheus_javaagent.jar && \
     chgrp 0 ${PROMETHEUS_HOME}/etc && \
-    chmod g+w ${PROMETHEUS_HOME}/etc \
+    chmod g+w ${PROMETHEUS_HOME}/etc
 
 USER jboss
 
