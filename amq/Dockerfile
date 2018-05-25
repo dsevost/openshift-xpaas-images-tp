@@ -2,26 +2,19 @@ FROM redhat-openjdk-18/openjdk18-openshift
 
 USER 0
 
-#RUN \
-#    yum-config-manager \
-#	--disable \* \
-#	--enable amq-interconnect-1-for-rhel-7-server-rpms \
-#	--enable rhel-7-server-rpms \
-#	> /dev/null \
-#    && \
+#	--disablerepo \* \
+#        --enablerepo amq-clients-2-for-rhel-7-server-rpms \
+#	--enablerepo amq-interconnect-1-for-rhel-7-server-rpms \
+#	--enablerepo rhel-7-server-rpms \
+#	qpid-dispatch-router \
+#	qpid-dispatch-tools \
 
 RUN \
     yum install -y \
-	--disablerepo \* \
-        --enablerepo amq-clients-2-for-rhel-7-server-rpms \
-	--enablerepo amq-interconnect-1-for-rhel-7-server-rpms \
-	--enablerepo rhel-7-server-rpms \
 	gettext \
 	hostname \
 	libaio \
 	procps \
-	qpid-dispatch-router \
-	qpid-dispatch-tools \
     && \
     yum clean all
 
