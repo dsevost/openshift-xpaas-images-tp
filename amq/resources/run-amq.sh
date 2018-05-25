@@ -17,7 +17,7 @@ sed -ci.bak1 \
     '/<restrict>/a     <remote><host>10.128.0.0/14</host></remote>' \
     /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
 sed -ci.bak1 \
-    '/<cors>/a         <allow-origin>http://*.openshift.tk</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
+    '/<cors>/a         <allow-origin>http://*.apps.openshift.tk</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
     /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
 
 sed -ci.bak1 \
