@@ -2,7 +2,6 @@
 
 $AMQ_HOME/bin/artemis create \
     --addresses=localhost,$HOSTNAME \
-    --aio \
     --user ${ADMIN_USER:-admin} \
     --password ${ADMIN_PASSWORD:-admin} \
     --allow-anonymous \
