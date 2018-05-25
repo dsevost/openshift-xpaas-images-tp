@@ -35,7 +35,7 @@ ARG REDHAT_REPO_URL
 
 ENV \
     AMQ_HOME=/opt/amq-broker \
-    JAVA_OPTS_APPEND=-javaagent:/opt/prometheus/lib/jmx_prometheus_javaagent.jar=9779:/opt/prometheus/etc/prometheus-config.yml \
+    JAVA_ARGS=-javaagent:/opt/prometheus/lib/jmx_prometheus_javaagent.jar=9779:/opt/prometheus/etc/prometheus-config.yml \
     PROMETHEUS_HOME=/opt/prometheus
 
 RUN \
