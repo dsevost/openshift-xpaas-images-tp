@@ -26,6 +26,6 @@ sed -ci.bak1 \
     '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND \\' \
     /var/run/amq/$HOSTNAME/bin/artemis
 
-cp -f $AMQ_HOME/templates/management.xml /var/run/amq/$HOSTNAME/etc
+#cp -f $AMQ_HOME/templates/management.xml /var/run/amq/$HOSTNAME/etc
 
 exec /var/run/amq/$HOSTNAME/bin/artemis run

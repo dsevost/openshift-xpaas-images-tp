@@ -39,7 +39,7 @@ ENV \
     PROMETHEUS_HOME=/opt/prometheus
 
 RUN \
-    set -x ; \
+    set -xe ; \
     curl -vo /tmp/$REDHAT_COMPONENT_NAME $REDHAT_REPO_URL/$REDHAT_COMPONENT_NAME && \
     unzip -d /opt /tmp/$REDHAT_COMPONENT_NAME && \
     rm -f /tmp/$REDHAT_COMPONENT_NAME && \
