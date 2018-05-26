@@ -12,11 +12,18 @@ $AMQ_HOME/bin/artemis create \
 
 LOGGING_LEVEL=${LOGGING_LEVEL:-INFO}
 
-sed -ci.bak1 "s|\.level=INFO|.level=$LOGGING_LEVEL|g" /var/run/amq/$HOSTNAME/etc/logging.properties
+#sed -ci.bak1 "s|\.level=INFO|.level=$LOGGING_LEVEL|g" /var/run/amq/$HOSTNAME/etc/logging.properties
+sed -ci.bak1 "\
+    s/^loggers=\(.*\)/loggers=\1,aio.prometheus.jmx/ ; \
+    s/logger.handlers=.*/logger.handlers=CONSOLE/ ; \
+    s/handler.FILE/#handler.FILE/ ; \
+    s/\.level=INFO/.level=$LOGGING_LEVEL/g ; \
+    " /var/run/amq/$HOSTNAME/etc/logging.properties
 
-sed -ci.bak1 \
-    '/<cors>/a         <allow-origin>http://*.apps.openshift.tk/*</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
-    /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
+#    '/<cors>/a<allow-origin>http://*.apps.openshift.tk/*</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
+sed -ci.bak1 '\
+    s|<cors>|<cors>\n		<allow-origin>http://*.apps.openshift.tk/*</allow-origin>\n		<allow-origin>http://amq*:*/*</allow-origin>| ;\
+    ' /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
 
 sed -ci.bak1 \
     's|http://localhost:8161|http://0.0.0.0:8161|' \
