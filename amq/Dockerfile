@@ -17,16 +17,16 @@ USER 0
 #    && \
 #    yum clean all
 
-RUN \
-    yum install -y \
-	--disablerepo \* \
-	--enablerepo rhel-7-server-rpms \
-	gettext \
-	hostname \
-	libaio \
-	procps \
-    && \
-    yum clean all
+#RUN \
+#    yum install -y \
+#	--disablerepo \* \
+#	--enablerepo rhel-7-server-rpms \
+#	gettext \
+#	hostname \
+#	libaio \
+#	procps \
+#    && \
+#    yum clean all
 
 ARG PROMETHEUS_JMX_REPO_URL
 ARG PROMETHEUS_JMX_AGENT_VERSION
