@@ -20,10 +20,7 @@ sed -ci.bak1 "\
     s/\.level=INFO/.level=$LOGGING_LEVEL/g ; \
     " /var/run/amq/$HOSTNAME/etc/logging.properties
 
-#    '/<cors>/a<allow-origin>http://*.apps.openshift.tk/*</allow-origin> <allow-origin>http://amq*:*/*</allow-origin>' \
-sed -ci.bak1 '\
-    s|<cors>|<cors>\n		<allow-origin>http://*.apps.openshift.tk/*</allow-origin>\n		<allow-origin>http://amq*:*/*</allow-origin>| ;\
-    ' /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
+sed -ci.bak1 's|<cors>|<cors>\n		<allow-origin>http://*.apps.openshift.tk/*</allow-origin>\n		<allow-origin>http://amq*:*/*</allow-origin>|' /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
 
 sed -ci.bak1 \
     's|http://localhost:8161|http://0.0.0.0:8161|' \
