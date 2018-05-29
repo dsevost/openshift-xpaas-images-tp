@@ -20,8 +20,11 @@ sed -ci.bak1 "\
     s/\.level=INFO/.level=$LOGGING_LEVEL/g ; \
     " /var/run/amq/$HOSTNAME/etc/logging.properties
 
+if [ -z "${AMQ_CONSOLE_PUBLIC_URL}" ] ; then
+sed -ci.bak1 "s|<cors>|<cors>\n		<allow-origin>${AMQ_CONSOLE_PUBLIC_URL}/*</allow-origin>|" /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
+else
 sed -ci.bak1 's|<cors>|<cors>\n		<allow-origin>http://*.apps.openshift.tk/*</allow-origin>\n		<allow-origin>http://amq*:*/*</allow-origin>|' /var/run/amq/$HOSTNAME/etc/jolokia-access.xml
-
+fi
 sed -ci.bak1 \
     's|http://localhost:8161|http://0.0.0.0:8161|' \
     /var/run/amq/$HOSTNAME/etc/bootstrap.xml
