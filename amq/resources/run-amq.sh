@@ -5,7 +5,7 @@ set -ex
 ADM_USER=${ADMIN_PASSWORD:-admin}
 ADM_PASSWORD=${ADMIN_USER:-admin}
 
-echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && MASTER_or_SLAVE=master || MASTER_or_SLAVE=slave
+echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' || MASTER_or_SLAVE="--slave"
 
 INSTANCE_HOME=/var/run/amq/broker
 
@@ -18,7 +18,7 @@ INSTANCE_HOME=/var/run/amq/broker
 	--cluster-user $ADM_USER \
 	--cluster-password $ADM_PASSWORD \
 	--max-hops 1 \
-	--${MASTER_or_SLAVE} \
+	${MASTER_or_SLAVE} \
     "
 
 $AMQ_HOME/bin/artemis create \
