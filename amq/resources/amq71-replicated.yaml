@@ -32,6 +32,8 @@ objects:
       app: ${APP_NAME}
     name: ${APP_NAME}
   spec:
+    lookupPolicy:
+      local: true
     tags:
     - name: latest
 - apiVersion: v1
@@ -98,12 +100,14 @@ objects:
             value: ${ADMIN_USER}
           - name: LOGGING_LEVEL
             value: ${LOGGING_LEVEL}
+          - name: AMQ_CLUSTERED
+            value: "yes"
           - name: POD_IP
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.podIP
-          image: ' '
+          image: "${APP_NAME}:latest"
           imagePullPolicy: Always
           name: ${APP_NAME}
           ports:
@@ -121,19 +125,19 @@ objects:
             protocol: TCP
           - containerPort: 9779
             protocol: TCP
-          volumeMounts:
-          - name: amq-data
-            mountPath: /var/run/amq/broker/data
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ${APP_NAME}
-        from:
-          kind: ImageStreamTag
-          name: ${APP_NAME}:latest
-      type: ImageChange
+#          volumeMounts:
+#          - name: amq-data
+#            mountPath: /var/run/amq/broker/data
+#    triggers:
+#    - type: ConfigChange
+#    - imageChangeParams:
+#        automatic: true
+#        containerNames:
+#        - ${APP_NAME}
+#        from:
+#          kind: ImageStreamTag
+#          name: ${APP_NAME}:latest
+#      type: ImageChange
   volumeClaimTemplates:
   - metadata:
       name: amq-data
