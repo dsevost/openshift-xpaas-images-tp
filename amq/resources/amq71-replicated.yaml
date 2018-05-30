@@ -1,12 +1,10 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: amq71-basic
-#  labels:
-#    template: amq71-basic
+  name: amq71-replicated
 parameters:
 - name: APP_NAME
-  value: amq-01
+  value: amq-repl-01
 - name: PROMETHEUS_JMX_REPO_URL
   description: default is http://central.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_JMX_AGENT_VERSION}
   value: ""
@@ -32,7 +30,6 @@ objects:
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}
   spec:
     tags:
@@ -42,7 +39,6 @@ objects:
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}
   spec:
     output:
@@ -74,17 +70,18 @@ objects:
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-- apiVersion: v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1beta1
+  kind: StatefulSet
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}
   spec:
-    replicas: 1
+    replicas: 2
     selector:
-      app: ${APP_NAME}
+      matchLabels:
+        app: "${APP_NAME}"
+      serviceName: "${APP_NAME}"
     strategy:
       type: Recreate
     template:
@@ -101,6 +98,11 @@ objects:
             value: ${ADMIN_USER}
           - name: LOGGING_LEVEL
             value: ${LOGGING_LEVEL}
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
           image: ' '
           imagePullPolicy: Always
           name: ${APP_NAME}
@@ -119,6 +121,9 @@ objects:
             protocol: TCP
           - containerPort: 9779
             protocol: TCP
+          volumeMounts:
+          - name: amq-data
+            mountPath: /var/run/amq/broker/data
     triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -129,12 +134,19 @@ objects:
           kind: ImageStreamTag
           name: ${APP_NAME}:latest
       type: ImageChange
+  volumeClaimTemplates:
+  - metadata:
+      name: amq-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}
   spec:
     ports:
@@ -156,7 +168,6 @@ objects:
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}-broker-amq-tcp
   spec:
     ports:
@@ -170,7 +181,6 @@ objects:
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}-console
   spec:
     ports:
@@ -184,7 +194,6 @@ objects:
   metadata:
     labels:
       app: ${APP_NAME}
-      template: amq71-basic
     name: ${APP_NAME}-console
   spec:
     port:
