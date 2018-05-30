@@ -5,11 +5,11 @@ set -ex
 ADM_USER=${ADMIN_PASSWORD:-admin}
 ADM_PASSWORD=${ADMIN_USER:-admin}
 
-echo $HOSTNAME | grep '^[a-z0-9]\+-0$' && MASTER_or_SLAVE=master || MASTER_or_SLAVE=slave
+echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && MASTER_or_SLAVE=master || MASTER_or_SLAVE=slave
 
 INSTANCE_HOME=/var/run/amq/broker
 
-[ -z "$AMQ_CLUSTERED" ] && \
+[ -z "$AMQ_CLUSTERED" ] || \
     CLUSTERED="\
 	--replicated \
 	--failover-on-shutdown \
