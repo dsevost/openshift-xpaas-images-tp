@@ -65,4 +65,3 @@ EXPOSE 8161 9779
 
 COPY resources/run-amq.sh $AMQ_HOME/bin/
 COPY resources/prometheus-jmx-exporter-config.yaml ${PROMETHEUS_HOME}/etc
-COPY resources/management.xml $AMQ_HOME/templates/
