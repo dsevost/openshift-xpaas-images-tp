@@ -8,7 +8,7 @@ ADM_PASSWORD=${ADMIN_USER:-admin}
 PEER=$(echo amq-test-01-0 | sed 's/-0$//')
 
 echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && PEER=${PEER}-1
-echo $HOSTNAME | grep '^[a-z0-9-]\+-1$' && { SLAVE="--slave" ; PEER=${PEER}-0
+echo $HOSTNAME | grep '^[a-z0-9-]\+-1$' && { SLAVE="--slave" ; PEER=${PEER}-0 ; }
 
 INSTANCE_HOME=/var/run/amq/broker
 
