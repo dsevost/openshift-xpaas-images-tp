@@ -5,7 +5,10 @@ set -ex
 ADM_USER=${ADMIN_PASSWORD:-admin}
 ADM_PASSWORD=${ADMIN_USER:-admin}
 
-echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' || MASTER_or_SLAVE="--slave"
+PEER=$(echo amq-test-01-0 | sed 's/-0$//')
+
+echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && PEER=${PEER}-1
+echo $HOSTNAME | grep '^[a-z0-9-]\+-1$' && { SLAVE="--slave" ; PEER=${PEER}-0
 
 INSTANCE_HOME=/var/run/amq/broker
 
@@ -18,7 +21,7 @@ INSTANCE_HOME=/var/run/amq/broker
 	--cluster-user $ADM_USER \
 	--cluster-password $ADM_PASSWORD \
 	--max-hops 1 \
-	${MASTER_or_SLAVE} \
+	${SLAVE} \
     "
 
 $AMQ_HOME/bin/artemis create \
@@ -62,7 +65,7 @@ sed -ci.bak1 "\
     s/<master\/>/<master>\n		<check-for-live-server>true<\/check-for-live-server>\n		<\/master>/ ; \
     s/<slave\/>/<slave>\n		<allow-failback>true<\/allow-failback>\n		<\/slave>/ ; \
     /<broadcast-groups>/,/<\/discovery-groups>/d ; \
-    s/<\/connector>/<\/connector>\n<connector name=\"discovery-connector\">tcp:\/\/${HOSTNAME}:61616<\/connector>/ ; \
+    s/<\/connector>/<\/connector>\n<connector name=\"discovery-connector\">tcp:\/\/${PEER}:61616<\/connector>/ ; \
     s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n		<\/static-connectors>/ ; \
     " $INSTANCE_HOME/etc/broker.xml
 
