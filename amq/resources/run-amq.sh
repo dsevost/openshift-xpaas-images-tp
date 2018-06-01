@@ -5,7 +5,7 @@ set -ex
 ADM_USER=${ADMIN_PASSWORD:-admin}
 ADM_PASSWORD=${ADMIN_USER:-admin}
 
-PEER=$(echo amq-test-01-0 | sed 's/-0$//')
+PEER=$(echo $HOSTNAME | sed 's/-0$//')
 
 echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && PEER=${PEER}-1.$HEADLESS_SERVICE_NAME
 echo $HOSTNAME | grep '^[a-z0-9-]\+-1$' && { SLAVE="--slave" ; PEER=${PEER}-0.$HEADLESS_SERVICE_NAME ; }
