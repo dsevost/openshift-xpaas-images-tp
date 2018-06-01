@@ -5,10 +5,20 @@ set -ex
 ADM_USER=${ADMIN_PASSWORD:-admin}
 ADM_PASSWORD=${ADMIN_USER:-admin}
 
-PEER=$(echo $HOSTNAME | sed 's/-0$//')
+#PEER=$(echo $HOSTNAME | sed 's/-0$//')
 
-echo $HOSTNAME | grep '^[a-z0-9-]\+-0$' && PEER=${PEER}-1.$HEADLESS_SERVICE_NAME
-echo $HOSTNAME | grep '^[a-z0-9-]\+-1$' && { SLAVE="--slave" ; PEER=${PEER}-0.$HEADLESS_SERVICE_NAME ; }
+if $(echo $HOSTNAME | grep '^[a-z0-9-]\+-0$') ; then
+    PEER=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
+else
+    if $(echo $HOSTNAME | grep '^[a-z0-9-]\+-1$') ; then
+	SLAVE="--slave"
+	PEER=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
+    else
+	echo "Only Replica '2' is supported"
+	sleep 120
+	exit 1
+    fi
+fi
 
 INSTANCE_HOME=/var/run/amq/broker
 
