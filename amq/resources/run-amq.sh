@@ -27,7 +27,7 @@ INSTANCE_HOME=/var/run/amq/broker
 	--replicated \
 	--failover-on-shutdown \
 	--clustered \
-	--host $HOSTNAME \
+	--host $HOSTNAME.$HEADLESS_SERVICE_NAME \
 	--cluster-user $ADM_USER \
 	--cluster-password $ADM_PASSWORD \
 	--max-hops 1 \
@@ -35,7 +35,7 @@ INSTANCE_HOME=/var/run/amq/broker
     "
 
 $AMQ_HOME/bin/artemis create \
-    --addresses=localhost,$HOSTNAME \
+    --addresses=localhost,$HOSTNAME.$HEADLESS_SERVICE_NAME \
     --allow-anonymous \
     --password ${ADM_USER} \
     --role admin \
