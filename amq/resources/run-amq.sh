@@ -80,6 +80,10 @@ sed -ci.bak1 "\
     s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n	<\/static-connectors>/ ; \
     " $INSTANCE_HOME/etc/broker.xml
 
+sed -ci.bak1 "\
+    s/<whitelist>/<whitelist>\n	<entry domain=\"org.apache.activemq.artemis\"\/> ; \
+    " $INSTANCE_HOME/etc/management.xml
+
 for i in {1..10} ; do
     dig +search +short ${PEER} | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' && { found=1; break ; }
     if [ "$i" -lt 10 ] ; then
