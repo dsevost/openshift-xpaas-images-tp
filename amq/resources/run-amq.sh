@@ -7,10 +7,10 @@ ADM_PASSWORD=${ADMIN_USER:-admin}
 
 #PEER=$(echo $HOSTNAME | sed 's/-0$//')
 
-if $(echo $HOSTNAME | grep '^[a-z0-9-]\+-0$') ; then
+if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-0$') ; then
     PEER=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
 else
-    if $(echo $HOSTNAME | grep '^[a-z0-9-]\+-1$') ; then
+    if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-1$') ; then
 	SLAVE="--slave"
 	PEER=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
     else
