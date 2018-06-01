@@ -76,7 +76,19 @@ sed -ci.bak1 "\
     s/<slave\/>/<slave>\n		<allow-failback>true<\/allow-failback>\n		<\/slave>/ ; \
     /<broadcast-groups>/,/<\/discovery-groups>/d ; \
     s/<\/connector>/<\/connector>\n<connector name=\"discovery-connector\">tcp:\/\/${PEER}:61616<\/connector>/ ; \
-    s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n		<\/static-connectors>/ ; \
+    s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n	<\/static-connectors>/ ; \
     " $INSTANCE_HOME/etc/broker.xml
+
+for i in {1..10} ; do
+    dig +search +short ${PEER} | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' && { found=1; break }
+    if [ "$i" -lt 10 ] ; then
+	sleep 30
+    fi
+done
+
+if [ -z "$found" ] ; then
+    echo "PEER '${PEER}' not resolved"
+    exit 1
+fi
 
 exec $INSTANCE_HOME/bin/artemis run
