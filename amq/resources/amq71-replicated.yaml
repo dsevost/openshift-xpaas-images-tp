@@ -83,7 +83,7 @@ objects:
     selector:
       matchLabels:
         app: "${APP_NAME}"
-      serviceName: "${APP_NAME}"
+    serviceName: "${APP_NAME}"
     strategy:
       type: Recreate
     template:
@@ -107,6 +107,8 @@ objects:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.podIP
+          - name: HEADLESS_SERVICE_NAME
+            value: "${APP_NAME}"
           image: "${APP_NAME}:latest"
           imagePullPolicy: Always
           name: ${APP_NAME}
@@ -153,6 +155,8 @@ objects:
       app: ${APP_NAME}
     name: ${APP_NAME}
   spec:
+    clusterIP: None
+    publishNotReadyAddresses: true
     ports:
     - name: mqtt-1883-tcp
       port: 1883
