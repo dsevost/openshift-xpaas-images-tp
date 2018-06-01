@@ -126,6 +126,7 @@ objects:
           - containerPort: 8161
             protocol: TCP
           - containerPort: 9779
+            name: prometheus
             protocol: TCP
           volumeMounts:
           - name: amq-data

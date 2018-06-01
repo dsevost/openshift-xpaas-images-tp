@@ -118,7 +118,11 @@ objects:
           - containerPort: 8161
             protocol: TCP
           - containerPort: 9779
+            name: prometheus
             protocol: TCP
+          volumeMounts:
+          - mountPath: /amq-broker-data
+            name: amq-broker-data
     triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -129,6 +133,10 @@ objects:
           kind: ImageStreamTag
           name: ${APP_NAME}:latest
       type: ImageChange
+    volumes:
+    - name: amq-broker-data
+      type:
+        emptyDir: {}
 - apiVersion: v1
   kind: Service
   metadata:
