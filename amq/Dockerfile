@@ -2,20 +2,22 @@ FROM redhat-openjdk-18/openjdk18-openshift
 
 USER 0
 
-#RUN \
-#    yum install -y \
-#	--disablerepo \* \
-#        --enablerepo amq-clients-2-for-rhel-7-server-rpms \
-#	--enablerepo amq-interconnect-1-for-rhel-7-server-rpms \
-#	--enablerepo rhel-7-server-rpms \
-#	qpid-dispatch-router \
-#	qpid-dispatch-tools \
-#	gettext \
-#	hostname \
-#	libaio \
-#	procps \
-#    && \
-#    yum clean all
+RUN \
+    yum install -y \
+	--disablerepo \* \
+        --enablerepo amq-clients-2-for-rhel-7-server-rpms \
+	--enablerepo amq-interconnect-1-for-rhel-7-server-rpms \
+	--enablerepo rhel-7-server-rpms \
+	qpid-dispatch-router \
+	qpid-dispatch-tools \
+	bind-utils \
+	gettext \
+	hostname \
+	iproute \
+	libaio \
+	procps \
+    && \
+    yum clean all
 
 #RUN \
 #    yum install -y \
