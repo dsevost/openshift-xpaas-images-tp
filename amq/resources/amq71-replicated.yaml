@@ -127,27 +127,17 @@ objects:
             protocol: TCP
           - containerPort: 9779
             protocol: TCP
-#          volumeMounts:
-#          - name: amq-data
-#            mountPath: /var/run/amq/broker/data
-#    triggers:
-#    - type: ConfigChange
-#    - imageChangeParams:
-#        automatic: true
-#        containerNames:
-#        - ${APP_NAME}
-#        from:
-#          kind: ImageStreamTag
-#          name: ${APP_NAME}:latest
-#      type: ImageChange
-  volumeClaimTemplates:
-  - metadata:
-      name: amq-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+          volumeMounts:
+          - name: amq-data
+            mountPath: /amq-broker-data
+    volumeClaimTemplates:
+    - metadata:
+        name: amq-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
 - apiVersion: v1
   kind: Service
   metadata:

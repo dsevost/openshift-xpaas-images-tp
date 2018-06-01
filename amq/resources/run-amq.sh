@@ -37,6 +37,7 @@ INSTANCE_HOME=/var/run/amq/broker
 $AMQ_HOME/bin/artemis create \
     --addresses=localhost,$HOSTNAME.$HEADLESS_SERVICE_NAME \
     --allow-anonymous \
+    --data /amq-broker-data \
     --password ${ADM_USER} \
     --role admin \
     --user ${ADM_PASSWORD} \
