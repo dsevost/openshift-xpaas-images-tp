@@ -80,7 +80,7 @@ sed -ci.bak1 "\
     " $INSTANCE_HOME/etc/broker.xml
 
 for i in {1..10} ; do
-    dig +search +short ${PEER} | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' && { found=1; break }
+    dig +search +short ${PEER} | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' && { found=1; break ; }
     if [ "$i" -lt 10 ] ; then
 	sleep 30
     fi
