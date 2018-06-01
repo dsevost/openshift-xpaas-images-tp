@@ -83,7 +83,7 @@ sed -ci.bak1 "\
     " $INSTANCE_HOME/etc/broker.xml
 
 sed -ci.bak1 "\
-    s/<whitelist>/<whitelist>\n	<entry domain=\"org.apache.activemq.artemis\"\/> ; \
+    s/<whitelist>/<whitelist>\n	<entry domain=\"org.apache.activemq.artemis\"\/>/ ; \
     " $INSTANCE_HOME/etc/management.xml
 
 for i in {1..10} ; do
