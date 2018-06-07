@@ -1,4 +1,6 @@
 
+# Build from scratch
+
 ```
 $ export REDHAT_REPO_URL=<>
 $ export APP_NAME=amq-test-01
@@ -43,4 +45,15 @@ $ oc expose \
 $ oc expose \
     svc/${APP_NAME}-console \
     -l app=${APP_NAME}
+```
+
+# Build from template
+## Simplest instance
+```
+$ oc create -f amq/resources/amq71-basic.yaml
+```
+
+## Replicated instance
+```
+$ oc create -f amq/resources/amq71-replicates.yaml
 ```
