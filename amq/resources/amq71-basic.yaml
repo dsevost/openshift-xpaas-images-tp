@@ -123,6 +123,10 @@ objects:
           volumeMounts:
           - mountPath: /amq-broker-data
             name: amq-broker-data
+        volumes:
+        - name: amq-broker-data
+          type:
+            emptyDir: {}    
     triggers:
     - type: ConfigChange
     - imageChangeParams:
@@ -133,10 +137,6 @@ objects:
           kind: ImageStreamTag
           name: ${APP_NAME}:latest
       type: ImageChange
-    volumes:
-    - name: amq-broker-data
-      type:
-        emptyDir: {}
 - apiVersion: v1
   kind: Service
   metadata:
