@@ -2,8 +2,9 @@
 
 set -ex
 
-ADM_USER=${ADMIN_PASSWORD:-admin}
-ADM_PASSWORD=${ADMIN_USER:-admin}
+ADM_USER=${ADMIN_USER:-admin}
+ADM_PASSWORD=${ADMIN_PASSWORD:-admin}
+JKS_PASSWORD=${JKS_PASSWORD}
 
 #PEER=$(echo $HOSTNAME | sed 's/-0$//')
 
@@ -97,5 +98,9 @@ if [ -z "$found" ] ; then
     echo "PEER '${PEER}' not resolved"
     exit 1
 fi
+
+sed -ci.bak1 "\
+    s|<acceptor name=\"amqp\">tcp:\/\/0.0.0.0:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>|<acceptor name=\"amqp\">tcp:\/\/0.0.0.0:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>\n       <acceptor name=\"amqps\">tcp:\/\/0.0.0.0:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/java.io/keystores;keyStorePassword=$JKS_PASSWORD<\/acceptor>| \
+    " $INSTANCE_HOME/etc/broker.xml
 
 exec $INSTANCE_HOME/bin/artemis run

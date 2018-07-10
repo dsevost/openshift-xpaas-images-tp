@@ -26,6 +26,8 @@ parameters:
   from: "[a-zA-Z0-9]{12}"
 - name: LOGGING_LEVEL
   value: INFO
+- name: JKS_PASSWORD
+  required: true  
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -52,7 +54,7 @@ objects:
     source:
       contextDir: amq
       git:
-        uri: https://github.com/dsevost/openshift-xpaas-images-tp
+        uri: https://github.com/andreessen/openshift-xpaas-images-tp
       type: Git
     strategy:
       dockerStrategy:
@@ -111,6 +113,8 @@ objects:
             protocol: TCP
           - containerPort: 5672
             protocol: TCP
+          - containerPort: 5673
+            protocol: TCP  
           - containerPort: 61613
             protocol: TCP
           - containerPort: 61616
@@ -157,6 +161,8 @@ objects:
       port: 5445
     - name: amqp-5672-tcp
       port: 5672
+    - name: amqps-5673-tcp
+      port: 5673
     - name: stomp-61613-tcp
       port: 61613
     - name: core-61616-tcp
