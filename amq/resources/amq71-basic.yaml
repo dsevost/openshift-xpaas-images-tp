@@ -123,10 +123,15 @@ objects:
           volumeMounts:
           - mountPath: /amq-broker-data
             name: amq-broker-data
+          - name: amq-certs
+            mountPath: /var/run/secrets/java.io/keystores  
         volumes:
         - name: amq-broker-data
           type:
-            emptyDir: {}    
+            emptyDir: {}
+        - name: amq-certs
+          secret:
+            secretName: amq-app-secret        
     triggers:
     - type: ConfigChange
     - imageChangeParams:
