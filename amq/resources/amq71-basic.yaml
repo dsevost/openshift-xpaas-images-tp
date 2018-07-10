@@ -101,6 +101,8 @@ objects:
             value: ${ADMIN_PASSWORD}
           - name: ADMIN_USER
             value: ${ADMIN_USER}
+          - name: JKS_PASSWORD
+            value: ${JKS_PASSWORD}  
           - name: LOGGING_LEVEL
             value: ${LOGGING_LEVEL}
           image: ' '
