@@ -72,7 +72,7 @@ sed -ci.bak1 \
     $INSTANCE_HOME/etc/bootstrap.xml
 
 sed -ci.bak1 \
-    '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND \\' \
+    '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND -Djavax.net.debug=ssl,handshake \\' \
     $INSTANCE_HOME/bin/artemis
 
 sed -ci.bak1 "\
