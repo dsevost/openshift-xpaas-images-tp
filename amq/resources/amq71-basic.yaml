@@ -130,8 +130,15 @@ objects:
           - mountPath: /amq-broker-data
             name: amq-broker-data
           - name: amq-certs
-            mountPath: /var/run/secrets/amq/keystores  
+            mountPath: /var/run/secrets/amq/keystores 
+          - mountPath: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.171-8.b10.el7_5.x86_64/jre/lib/security
+            name: amq-java-sec
+            subPath: java.security   
         volumes:
+        - configMap:
+            defaultMode: 420
+            name: ${APP_NAME}-java-security
+          name: amq-java-sec
         - name: amq-broker-data
           type:
             emptyDir: {}
