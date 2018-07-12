@@ -137,7 +137,7 @@ objects:
             emptyDir: {}
         - name: amq-certs
           secret:
-            secretName: amq-app-secret        
+            secretName: amq-server-ks-secret        
     triggers:
     - type: ConfigChange
     - imageChangeParams:
