@@ -72,8 +72,12 @@ sed -ci.bak1 \
     $INSTANCE_HOME/etc/bootstrap.xml
 
 sed -ci.bak1 \
-    '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2" \\' \
+    '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND \\' \
     $INSTANCE_HOME/bin/artemis
+
+sed -ci.bak1 \
+    's|jdk.tls.disabledAlgorithms=|jdk.tls.disabledAlgorithms=SSLv2Hello,|' \
+    /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.171-8.b10.el7_5.x86_64/jre/lib/security/java.security    
 
 sed -ci.bak1 "\
     s/<master\/>/<master>\n		<check-for-live-server>true<\/check-for-live-server>\n		<\/master>/ ; \
