@@ -55,15 +55,7 @@ sed -ci.bak1 "\
     s/logger.handlers=.*/logger.handlers=CONSOLE/ ; \
     s/handler.FILE/#handler.FILE/ ; \
     s/\.level=INFO/.level=$LOGGING_LEVEL/g ; \
-    s|logger.org.apache.activemq.artemis.jms.level=INFO|logger.org.apache.activemq.artemis.jms.level=DEBUG|
     " $INSTANCE_HOME/etc/logging.properties
-
-sed -ci.bak2 "\
-    s|logger.org.apache.activemq.artemis.jms.level=INFO|logger.org.apache.activemq.artemis.jms.level=DEBUG|
-    " $INSTANCE_HOME/etc/logging.properties
-sed -ci.bak3 "\
-    s|logger.org.apache.activemq.artemis.core.server.level=INFO|logger.org.apache.activemq.artemis.core.server.level=DEBUG|
-    " $INSTANCE_HOME/etc/logging.properties    
 
 if [ -z "${AMQ_CONSOLE_PUBLIC_URL}" ] ; then
     sed -ci.bak1 \
