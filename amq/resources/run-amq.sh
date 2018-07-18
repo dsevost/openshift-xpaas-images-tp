@@ -11,10 +11,12 @@ JKS_PASSWORD=${JKS_PASSWORD}
 if ! [ -z "$AMQ_CLUSTERED" ] ; then
     if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-0$') ; then
 	PEER=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
+    CURRENT_HOST=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
     else
 	if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-1$') ; then
 	    SLAVE="--slave"
 	    PEER=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
+        CURRENT_HOST=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
 	else
 	    echo "Only Replica '2' is supported"
 	    sleep 120
@@ -33,6 +35,7 @@ if ! [ -z "$AMQ_CLUSTERED" ] ; then
     "
 else
     PEER=127.0.0.1
+    CURRENT_HOST=0.0.0.0
 fi
 
 INSTANCE_HOME=/var/run/amq/broker
@@ -89,7 +92,7 @@ sed -ci.bak2 "\
     " $INSTANCE_HOME/etc/broker.xml
 #In case of replicated
 sed -ci.bak2 "\
-    s|<acceptor name=\"amqp\">tcp:\/\/${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>|<acceptor name=\"amqp\">tcp:\/\/${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>\n       <acceptor name=\"amqps\">tcp:\/\/${PEER}:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/amq/keystores/amq-broker.ks;keyStorePassword=$JKS_PASSWORD<\/acceptor>| \
+    s|<acceptor name=\"amqp\">tcp:\/\/${CURRENT_HOST}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>|<acceptor name=\"amqp\">tcp:\/\/${CURRENT_HOST}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>\n       <acceptor name=\"amqps\">tcp:\/\/${CURRENT_HOST}:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/amq/keystores/amq-broker.ks;keyStorePassword=$JKS_PASSWORD<\/acceptor>| \
     " $INSTANCE_HOME/etc/broker.xml    
 
 sed -ci.bak1 "\
