@@ -143,7 +143,15 @@ objects:
             mountPath: /var/run/secrets/amq/keystores
           - mountPath: ${JAVA_SECURITY_PATH}
             name: amq-java-sec
-            subPath: java.security  
+            subPath: java.security
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: ${APP_NAME}-java-security
+          name: amq-java-sec
+        - name: amq-certs
+          secret:
+            secretName: amq-server-ks-secret  
     volumeClaimTemplates:
     - metadata:
         name: amq-data
@@ -152,14 +160,6 @@ objects:
         resources:
           requests:
             storage: 1Gi
-    volumes:
-    - configMap:
-        defaultMode: 420
-        name: ${APP_NAME}-java-security
-      name: amq-java-sec
-    - name: amq-certs
-          secret:
-            secretName: amq-server-ks-secret
 - apiVersion: v1
   kind: Service
   metadata:
