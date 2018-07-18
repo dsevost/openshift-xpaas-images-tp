@@ -89,7 +89,7 @@ sed -ci.bak2 "\
     " $INSTANCE_HOME/etc/broker.xml
 #In case of replicated
 sed -ci.bak2 "\
-    s|<acceptor name=\"amqp\">tcp://${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300</acceptor>|<acceptor name=\"amqp\">tcp://${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300</acceptor>\n       <acceptor name=\"amqps\">tcp://${PEER}:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/amq/keystores/amq-broker.ks;keyStorePassword=$JKS_PASSWORD</acceptor>| \
+    s|<acceptor name=\"amqp\">tcp:\/\/${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>|<acceptor name=\"amqp\">tcp:\/\/${PEER}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>\n       <acceptor name=\"amqps\">tcp:\/\/${PEER}:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/amq/keystores/amq-broker.ks;keyStorePassword=$JKS_PASSWORD<\/acceptor>| \
     " $INSTANCE_HOME/etc/broker.xml    
 
 sed -ci.bak1 "\
