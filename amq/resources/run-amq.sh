@@ -2,18 +2,21 @@
 
 set -ex
 
-ADM_USER=${ADMIN_PASSWORD:-admin}
-ADM_PASSWORD=${ADMIN_USER:-admin}
+ADM_USER=${ADMIN_USER:-admin}
+ADM_PASSWORD=${ADMIN_PASSWORD:-admin}
+JKS_PASSWORD=${JKS_PASSWORD}
 
 #PEER=$(echo $HOSTNAME | sed 's/-0$//')
 
 if ! [ -z "$AMQ_CLUSTERED" ] ; then
     if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-0$') ; then
 	PEER=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
+    CURRENT_HOST=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
     else
 	if test $(echo $HOSTNAME | grep '^[a-z0-9-]\+-1$') ; then
 	    SLAVE="--slave"
 	    PEER=${HEADLESS_SERVICE_NAME}-0.$HEADLESS_SERVICE_NAME
+        CURRENT_HOST=${HEADLESS_SERVICE_NAME}-1.$HEADLESS_SERVICE_NAME
 	else
 	    echo "Only Replica '2' is supported"
 	    sleep 120
@@ -30,8 +33,11 @@ if ! [ -z "$AMQ_CLUSTERED" ] ; then
 	--max-hops 1 \
 	${SLAVE} \
     "
+    JKS_NAME=$CURRENT_HOST-broker.ks
 else
     PEER=127.0.0.1
+    CURRENT_HOST=0.0.0.0
+    JKS_NAME=amq-broker.ks
 fi
 
 INSTANCE_HOME=/var/run/amq/broker
@@ -72,7 +78,7 @@ sed -ci.bak1 \
 
 sed -ci.bak1 \
     '/JAVA_ARGS \\/a $JAVA_OPTS_APPEND \\' \
-    $INSTANCE_HOME/bin/artemis
+    $INSTANCE_HOME/bin/artemis 
 
 sed -ci.bak1 "\
     s/<master\/>/<master>\n		<check-for-live-server>true<\/check-for-live-server>\n		<\/master>/ ; \
@@ -81,6 +87,10 @@ sed -ci.bak1 "\
     s/<\/connector>/<\/connector>\n<connector name=\"discovery-connector\">tcp:\/\/${PEER}:61616<\/connector>/ ; \
     s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n	<\/static-connectors>/ ; \
     " $INSTANCE_HOME/etc/broker.xml
+
+sed -ci.bak2 "\
+    s|<acceptor name=\"amqp\">tcp:\/\/${CURRENT_HOST}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>|<acceptor name=\"amqp\">tcp:\/\/${CURRENT_HOST}:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300<\/acceptor>\n       <acceptor name=\"amqps\">tcp:\/\/${CURRENT_HOST}:5673?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300;sslEnabled=true;keyStorePath=/var/run/secrets/amq/keystores/${JKS_NAME};keyStorePassword=$JKS_PASSWORD<\/acceptor>| \
+    " $INSTANCE_HOME/etc/broker.xml   
 
 sed -ci.bak1 "\
     s/<whitelist>/<whitelist>\n	<entry domain=\"org.apache.activemq.artemis\"\/>/ ; \
