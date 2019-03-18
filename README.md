@@ -50,10 +50,10 @@ $ oc expose \
 # Build from template
 ## Simplest instance
 ```
-$ oc create -f amq/resources/amq71-basic.yaml
+$ oc create -f amq/resources/amq7-basic.yaml
 ```
 
 ## Replicated instance
 ```
-$ oc create -f amq/resources/amq71-replicates.yaml
+$ oc create -f amq/resources/amq7-replicates.yaml
 ```
