@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: amq71-replicated
+  name: amq7-replicated
 parameters:
 - name: APP_NAME
-  value: amq-repl-01
+  value: amq7-repl-01
 - name: PROMETHEUS_JMX_REPO_URL
   description: default is http://central.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_JMX_AGENT_VERSION}
   value: ""
 - name: PROMETHEUS_JMX_AGENT_VERSION
   value: "0.3.1"
 - name: REDHAT_COMPONENT_NAME
-  value: amq-broker-7.1.0-bin.zip
+  value: amq-broker-7.2.0-bin.zip
 - name: REDHAT_REPO_URL
   description: An URL where ${REDHAT_COMPONENT_NAME} is
   required: true
@@ -65,7 +65,7 @@ objects:
           value: ${REDHAT_REPO_URL}
         from:
           kind: ImageStreamTag
-          name: redhat-openjdk18-openshift:1.3
+          name: redhat-openjdk18-openshift:1.5
           namespace: openshift
       type: Docker
     triggers:
@@ -90,7 +90,7 @@ objects:
       metadata:
         labels:
           app: ${APP_NAME}
-          template: amq71-basic
+          template: amq7-replicated
       spec:
         containers:
         - env:

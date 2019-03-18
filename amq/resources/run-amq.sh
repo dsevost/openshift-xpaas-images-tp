@@ -30,8 +30,10 @@ if ! [ -z "$AMQ_CLUSTERED" ] ; then
 	--max-hops 1 \
 	${SLAVE} \
     "
+    JKS_NAME=$HOSTNAME
 else
     PEER=127.0.0.1
+    JKS_NAME=amq
 fi
 
 INSTANCE_HOME=/var/run/amq/broker
@@ -78,9 +80,32 @@ sed -ci.bak1 "\
     s/<master\/>/<master>\n		<check-for-live-server>true<\/check-for-live-server>\n		<\/master>/ ; \
     s/<slave\/>/<slave>\n		<allow-failback>true<\/allow-failback>\n		<\/slave>/ ; \
     /<broadcast-groups>/,/<\/discovery-groups>/d ; \
-    s/<\/connector>/<\/connector>\n<connector name=\"discovery-connector\">tcp:\/\/${PEER}:61616<\/connector>/ ; \
-    s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/<static-connectors>\n		<connector-ref>discovery-connector<\/connector-ref>\n	<\/static-connectors>/ ; \
+    s/<\/connector>/<\/connector>\n\
+      <connector name=\"discovery-connector\">tcp:\/\/${PEER}:61616<\/connector>/ ; \
+    s/<discovery-group-ref discovery-group-name=\"dg-group1\"\/>/\n\
+      <static-connectors>\n\
+      	<connector-ref>discovery-connector<\/connector-ref>\n\
+      <\/static-connectors>/ ; \
     " $INSTANCE_HOME/etc/broker.xml
+
+case "$SSL_ENABLED" in
+	True|true|TRUE|Yes|yes|YES|1)
+    	export KEYSTORE_PATH=/var/run/secrets/amq/keystores/${JKS_NAME}-broker.jks
+        AMQPS="\
+        <acceptor name=\"amqps\">tcp://${HOSTNAME}.$HEADLESS_SERVICE_NAME:5673?\
+tcpSendBufferSize=1048576;\
+tcpReceiveBufferSize=1048576;\
+protocols=AMQP;\
+useEpoll=true;\
+amqpCredits=1000;\
+amqpMinCredits=300;\
+sslEnabled=true;\
+keyStorePath=/var/run/secrets/amq/keystores/${KEYSTORE_PATH};\
+keyStorePassword=$JKS_PASSWORD\
+</acceptor>"
+        sed -ci.ssl "/<acceptor name=\"amqp\">tcp:/a $AMQPS" $INSTANCE_HOME/etc/broker.xml
+    ;;
+esac
 
 sed -ci.bak1 "\
     s/<whitelist>/<whitelist>\n	<entry domain=\"org.apache.activemq.artemis\"\/>/ ; \

@@ -54,9 +54,9 @@ RUN \
     \
     mkdir -p ${PROMETHEUS_HOME}/{bin,etc,lib} && \
     export pev=${PROMETHEUS_JMX_AGENT_VERSION:-0.3.1} && \
-    export per=${PROMETHEUS_JMX_REPO_URL:-http://central.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${pev}} && \
+    export per=${PROMETHEUS_JMX_REPO_URL:-http://central.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent} && \
     curl \
-	${per}/jmx_prometheus_javaagent-${pev}.jar \
+	${per}/${pev}/jmx_prometheus_javaagent-${pev}.jar \
         -o ${PROMETHEUS_HOME}/lib/jmx_prometheus_javaagent.jar && \
     chgrp 0 ${PROMETHEUS_HOME}/etc && \
     chmod g+w ${PROMETHEUS_HOME}/etc
