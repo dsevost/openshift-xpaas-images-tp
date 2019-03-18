@@ -55,5 +55,5 @@ $ oc create -f amq/resources/amq7-basic.yaml
 
 ## Replicated instance
 ```
-$ oc create -f amq/resources/amq7-replicates.yaml
+$ oc create -f amq/resources/amq7-replicated.yaml
 ```
